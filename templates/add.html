@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1>Tambah Video Baru</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Judul Video</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="dood_url" class="form-label">URL DoodStream</label>
+                <input type="url" class="form-control" id="dood_url" name="dood_url" required>
+            </div>
+            <div class="mb-3">
+                <label for="category_id" class="form-label">Kategori</label>
+                <select class="form-select" id="category_id" name="category_id">
+                    <option value="">-- Pilih Kategori --</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="form-text">
+                    <a href="{{ url_for('categories') }}">Kelola kategori</a>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="thumbnail_url" class="form-label">URL Thumbnail (Opsional)</label>
+                <input type="url" class="form-control" id="thumbnail_url" name="thumbnail_url" placeholder="https://example.com/image.jpg">
+                <small class="text-muted">Link langsung ke gambar (contoh: berakhiran .jpg, .png, dll)</small>
+            </div>
+            <div class="mb-3">
+                <label for="thumbnail" class="form-label">Atau Upload Thumbnail (Opsional)</label>
+                <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*">
+                <small class="text-muted">Format yang didukung: JPG, PNG, GIF</small>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Deskripsi (Opsional)</label>
+                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Tambah Video
+            </button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Batal
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

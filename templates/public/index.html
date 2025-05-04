@@ -1,0 +1,115 @@
+{% extends "public/base.html" %}
+
+{% block hero %}
+<div class="hero-section">
+    <div class="hero-content">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="hero-title">Selamat Datang di Asupan Bersama</h1>
+                    <p class="hero-subtitle">Temukan berbagai video menarik dan seru untuk ditonton bersama</p>
+                    <div class="hero-search">
+                        <form action="{{ url_for('public_search') }}" method="GET">
+                            <div class="input-group">
+                                <input type="search" name="q" class="form-control" placeholder="Cari video favorit Anda...">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i> Cari
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<section id="latest" class="section-padding">
+    <div class="section-header">
+        <h2><i class="fas fa-clock"></i> Video Terbaru</h2>
+        <p>Update terbaru video pilihan untuk Anda</p>
+    </div>
+    <div class="row">
+        {% for video in latest_videos %}
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    {% if video.thumbnail_url %}
+                    <img src="{{ video.thumbnail_url }}" alt="{{ video.title }}"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/320x180.png?text=Tidak+Ada+Thumbnail';">
+                    {% else %}
+                    <img src="https://via.placeholder.com/320x180.png?text=Tidak+Ada+Thumbnail" alt="No Thumbnail">
+                    {% endif %}
+                    <div class="video-duration">HD</div>
+                    <a href="{{ url_for('public_watch', id=video.id) }}" class="play-button">
+                        <i class="fas fa-play"></i>
+                    </a>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">
+                        <a href="{{ url_for('public_watch', id=video.id) }}">{{ video.title }}</a>
+                    </h3>
+                    <div class="video-meta">
+                        <span><i class="far fa-clock"></i> {{ video.date_added.strftime('%d %b %Y') }}</span>
+                        <span><i class="far fa-eye"></i> {{ video.views|default(0) }}</span>
+                        {% if video.category %}
+                        <span>
+                            <i class="fas fa-tag"></i>
+                            <a href="{{ url_for('public_category', id=video.category.id) }}" class="category-link">
+                                {{ video.category.name }}
+                            </a>
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if latest_videos|length >= 8 %}
+    <div class="text-center mt-4">
+        <a href="{{ url_for('public_latest') }}" class="btn btn-outline-primary">
+            <i class="fas fa-plus"></i> Lihat Lebih Banyak
+        </a>
+    </div>
+    {% endif %}
+</section>
+
+{% if categories %}
+<section id="categories" class="section-padding">
+    <div class="section-header">
+        <h2><i class="fas fa-tags"></i> Kategori</h2>
+        <p>Pilih kategori video favorit Anda</p>
+    </div>
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <a href="{{ url_for('public_category', id=category.id) }}" class="category-card">
+                <i class="fas fa-folder"></i>
+                <h3>{{ category.name }}</h3>
+                <span class="count">{{ category.videos|length }} video</span>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Tambahkan class 'navbar-scrolled' ke navbar saat di-scroll
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('navbar-scrolled');
+        } else {
+            navbar.classList.remove('navbar-scrolled');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "public/base.html" %}
+
+{% block content %}
+<div class="search-results section-padding">
+    <div class="section-header">
+        <h2><i class="fas fa-search"></i> Hasil Pencarian</h2>
+        {% if query %}
+        <p>Menampilkan hasil untuk: "{{ query }}"</p>
+        {% endif %}
+    </div>
+
+    {% if videos %}
+    <div class="row">
+        {% for video in videos %}
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    {% if video.thumbnail_url %}
+                    <img src="{{ video.thumbnail_url }}" alt="{{ video.title }}"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/320x180.png?text=Tidak+Ada+Thumbnail';">
+                    {% else %}
+                    <img src="https://via.placeholder.com/320x180.png?text=Tidak+Ada+Thumbnail" alt="No Thumbnail">
+                    {% endif %}
+                    <div class="video-duration">HD</div>
+                    <a href="{{ url_for('public_watch', id=video.id) }}" class="play-button">
+                        <i class="fas fa-play"></i>
+                    </a>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">
+                        <a href="{{ url_for('public_watch', id=video.id) }}">{{ video.title }}</a>
+                    </h3>
+                    <div class="video-meta">
+                        <span><i class="far fa-clock"></i> {{ video.date_added.strftime('%d %b %Y') }}</span>
+                        <span><i class="far fa-eye"></i> {{ video.views|default(0) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-results text-center">
+        <i class="fas fa-search fa-3x mb-3"></i>
+        <h3>Tidak Ada Hasil</h3>
+        {% if query %}
+        <p>Maaf, tidak ada video yang cocok dengan pencarian "{{ query }}"</p>
+        {% else %}
+        <p>Silakan masukkan kata kunci pencarian</p>
+        {% endif %}
+        <a href="{{ url_for('public_index') }}" class="btn btn-primary mt-3">
+            <i class="fas fa-home"></i> Kembali ke Beranda
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

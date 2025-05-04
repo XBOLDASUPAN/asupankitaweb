@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Video Saya</h1>
+        <a href="{{ url_for('add_video') }}" class="btn btn-primary mb-3">
+            <i class="fas fa-plus-circle"></i> Tambah Video
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    {% for video in videos %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            {% if video.thumbnail_url %}
+            <div class="card-img-container">
+                <img src="{{ video.thumbnail_url }}" class="card-img-top" alt="{{ video.title }}"
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/320x180.png?text=Tidak+Ada+Thumbnail';">
+            </div>
+            {% else %}
+            <div class="card-img-container">
+                <img src="https://via.placeholder.com/320x180.png?text=Tidak+Ada+Thumbnail" class="card-img-top" alt="Tidak Ada Thumbnail">
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ video.title }}</h5>
+                {% if video.description %}
+                <p class="card-text">{{ video.description }}</p>
+                {% endif %}
+                <p class="card-text"><small class="text-muted">Ditambahkan pada: {{ video.date_added.strftime('%Y-%m-%d') }}</small></p>
+                <div class="card-buttons">
+                    <a href="{{ video.dood_url }}" target="_blank" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Tonton Video
+                    </a>
+                    <a href="{{ url_for('delete_video', id=video.id) }}" class="btn btn-danger" 
+                       onclick="return confirm('Apakah Anda yakin ingin menghapus video ini?')">
+                        <i class="fas fa-trash"></i> Hapus
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
